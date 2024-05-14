@@ -1,0 +1,67 @@
+version: 2.1
+
+name: Create Docker image and Deploy
+on:
+  push:
+    branches:
+      - main
+
+orbs:
+  node: circleci/node@1.1.6
+
+jobs:
+  checkout_and_build:
+    docker:
+      - image: circleci/node:14
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: false
+      # this is private repository ↓
+      - run: git clone https://github.com/mundodevsecops/my_project_nodejs.git
+      - run:
+          name: Check status
+          command: |
+             ls -al        
+
+      - run: |
+          echo $DOCKER_PASSWORD | docker login -u jenniedocker --password-stdin
+          docker build -t jenniedocker/app_nodejs:v0.1 .
+          docker push jenniedocker/app_nodejs:v0.1 
+  test:
+    docker:
+      - image: jenniedocker/app_nodejs:v0.1 
+    steps:
+      - checkout
+      - run:
+          name: Run tests
+          command: |
+            npm test
+  deploy:
+    docker:
+      - image: circleci/python:3.8
+    steps:
+      - checkout
+      - run:
+          name: Deploy to EC2
+          command: |
+            ssh -oStrictHostKeyChecking=no -i admin_devops.pem ubuntu@3.208.95.33 \
+            'git clone https://github.com/mundodevsecops/my_project_nodejs.git \
+             && docker pull jenniedocker/app_nodejs:v0.1 \
+             && docker run -d -p 3000:3000 jenniedocker/app_nodejs:v0.1'
+      - run: curl http://3.208.95.33:3000
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - checkout_and_build
+      - test:
+          requires:
+            - checkout_and_build
+      - deploy:
+          requires:
+            - test
+
+
+
