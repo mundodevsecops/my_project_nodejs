@@ -1,0 +1,19 @@
+{
+  "name": "my_project_nodejs",
+  "version": "1.0.0",
+  "description": "desafio devops",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mundodevsecops/my_project_nodejs.git"
+  },
+  "author": "Jennie Moura",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mundodevsecops/my_project_nodejs/issues"
+  },
+  "homepage": "https://github.com/mundodevsecops/my_project_nodejs#readme"
+}
