@@ -1,0 +1,17 @@
+---
+- name: Instação do Nodejs
+  hosts: desafio-devops-ec2
+  become: yes
+  become_user: root
+  tasks:
+  - name: Update apt repo and cache
+    apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+  - name: Instalação node e npm
+    ansible.builtin.apt:
+      name: "{{ item }}"
+      state: present
+      update_cache: true
+    loop:
+      - nodejs
+      - npm

@@ -1,0 +1,6 @@
+[local]
+localhost ansible_connection=local ansible_python_interpreter=python3 gatner_facts=false
+
+[desafio-devops-ec2]
+3.208.95.33 ansible_user=ubuntu ansible_python_interpreter=/usr/bin/python3 ansible_ssh_private_key_file=/home/mundodevops/.ssh/admin_devops.pem
+
